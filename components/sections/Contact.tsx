@@ -49,6 +49,14 @@ export default function Contact() {
     setIsSending(true);
     setStatus("idle");
 
+    const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
+    if(!accessKey){
+      console.error("Web3Forms access key is not set in environment variables.");
+      setStatus("error");
+      setIsSending(false);
+      return;
+    }
+
     try {
       const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
@@ -57,7 +65,7 @@ export default function Contact() {
           Accept: "application/json",
         },
         body: JSON.stringify({
-          access_key: "YOUR_WEB3FORMS_ACCESS_KEY",
+          access_key: accessKey,
           name: formData.name,
           email: formData.email,
           subject: formData.subject,
